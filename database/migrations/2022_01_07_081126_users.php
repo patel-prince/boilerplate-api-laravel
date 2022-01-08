@@ -18,9 +18,9 @@ class Users extends Migration
             $table->string('password');
             $table->string('phone', 20)->nullable();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('email_verification_code')->nullable();
+            $table->text('email_verification_code')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
-            $table->string('phone_verification_code')->nullable();
+            $table->text('phone_verification_code')->nullable();
             $table->timestamp('last_login_at')->nullable();
             $table->foreignId('default_organisation_id')->nullable();
             $table->timestamps();
