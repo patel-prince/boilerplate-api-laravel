@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Traits\HelperTrait;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -9,6 +10,8 @@ use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
+    use HelperTrait;
+
     /**
      * Register any application services.
      *
@@ -43,6 +46,19 @@ class AppServiceProvider extends ServiceProvider
         Validator::extend('password_format', function ($attribute, $value) {
             return preg_match(Config::get('regex.password_format'), $value);
         }, Config::get('messages.validation.password_format'));
+
+        Validator::extend('valid_hash_token', function ($attribute, $value) {
+            try {
+                $verification_details = $this->decryptEmailVerificationCode($value);
+                $code_age = abs(($verification_details['time'] - time()) / (60 * 60));
+                if ($code_age > env('EMAIL_VERIFICATION_CODE_EXPIRY', 2)) {
+                    return false;
+                }
+            } catch (\Exception $e) {
+                return false;
+            }
+            return true;
+        }, Config::get('messages.validation.valid_hash_token'));
 
     }
 }

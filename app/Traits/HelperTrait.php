@@ -13,9 +13,15 @@ trait HelperTrait
             'data' => $data
         ]);
         return [
-            'url' => ($request->header('origin') ?? "http://localhost:3000") . '/verify/email/' . $code,
+            'url' => ($request->header('origin') ?? "http://localhost:3000") . '/verify-email/' . $code,
             'code' => $code,
             'data' => $data
         ];
     }
+
+    public function decryptEmailVerificationCode($verification_code)
+    {
+        return Crypt::decrypt($verification_code);
+    }
+
 }

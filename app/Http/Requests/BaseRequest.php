@@ -25,6 +25,7 @@ class BaseRequest extends FormRequest
             'email' => Config::get('messages.validation.email'),
             'unique' => Config::get('messages.validation.unique'),
             'password_format' => Config::get('messages.validation.password_format'),
+            'valid_hash_token' => Config::get('messages.validation.valid_hash_token')
         ];
     }
 

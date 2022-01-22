@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Config;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -45,7 +46,7 @@ class Handler extends ExceptionHandler
     public function render($request, Throwable $e)
     {
         if ($request->is('api/*')) {
-            if ($e instanceof NotFoundHttpException) {
+            if ($e instanceof NotFoundHttpException || $e instanceof ModelNotFoundException) {
                 return response()->json(['message' => Config::get('messages.404')], 404);
             }
             if ($e instanceof AuthorizationException) {
