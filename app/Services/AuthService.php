@@ -7,7 +7,7 @@ use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Repositories\AuthRepository;
 use App\Traits\HelperTrait;
 
-class AuthService
+class AuthService extends BaseService
 {
     use HelperTrait;
 
@@ -16,6 +16,7 @@ class AuthService
     public function __construct(AuthRepository $auth)
     {
         $this->auth = $auth;
+        parent::__construct($auth);
     }
 
     public function registerWithEmail(RegisterWithEmailRequest $request, $verification_details)

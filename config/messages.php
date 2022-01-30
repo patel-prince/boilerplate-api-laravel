@@ -14,6 +14,10 @@ return [
         'valid_hash_token' => ':attribute is invalid or expired.'
     ],
     'api' => [
+        'send_email_verification_code' => [
+            'success' => 'Email verification code has been sent successfully.',
+            'already_verified' => 'Email ID is already verified. Please try to login.'
+        ],
         'register_with_email' => 'Congratulations, you have successfully registered.',
         'verify_email' => 'Account has been verified.'
     ]

@@ -18,4 +18,14 @@ class BaseRepository
     {
         return $this->model->create($data)->fresh();
     }
+
+    public function findOrFail($id)
+    {
+        return $this->model->findOrFail($id);
+    }
+
+    public function findByOrFail($field, $value)
+    {
+        return $this->model->where($field, $value)->firstOrFail();
+    }
 }

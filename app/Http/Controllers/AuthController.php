@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\RegisterWithEmailRequest;
 use App\Http\Requests\Auth\VerifyEmailRequest;
+use App\Http\Requests\sendEmailVerificationCodeRequest;
 use App\Mail\EmailVerificationCodeMail;
 use App\Services\AuthService;
 use App\Traits\HelperTrait;
@@ -29,6 +30,21 @@ class AuthController extends Controller
         $user = $this->auth->registerWithEmail($request, $verification_details);
         Mail::to($user->email)->send(new EmailVerificationCodeMail($verification_details));
         return response()->json(['message' => Config::get('messages.api.register_with_email')]);
+    }
+
+    public function sendEmailVerificationCode(sendEmailVerificationCodeRequest $request)
+    {
+        $data = $request->only(['email']);
+        $user = $this->auth->findByOrFail('email', $data['email']);
+        if ($user->email_verified_at == null) {
+            $verification_details = $this->createEmailVerificationCode($data, $request);
+            $user->email_verification_code = $verification_details['code'];
+            $user->save();
+            Mail::to($user->email)->send(new EmailVerificationCodeMail($verification_details));
+            return response()->json(['notify' => Config::get('messages.api.send_email_verification_code.success')]);
+        } else {
+            return response()->json(['notify' => Config::get('messages.api.send_email_verification_code.already_verified')], 409);
+        }
     }
 
     public function verifyEmail(VerifyEmailRequest $request)
