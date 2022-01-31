@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\RegisterWithEmailRequest;
+use App\Http\Requests\Auth\sendEmailVerificationCodeRequest;
 use App\Http\Requests\Auth\VerifyEmailRequest;
-use App\Http\Requests\sendEmailVerificationCodeRequest;
 use App\Mail\EmailVerificationCodeMail;
 use App\Services\AuthService;
 use App\Traits\HelperTrait;
