@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\BaseRequest;
 
-class sendEmailVerificationCodeRequest extends BaseRequest
+class SendEmailVerificationCodeRequest extends BaseRequest
 {
 
     public function authorize()

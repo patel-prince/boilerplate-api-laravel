@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\RegisterWithEmailRequest;
-use App\Http\Requests\Auth\sendEmailVerificationCodeRequest;
+use App\Http\Requests\Auth\SendEmailVerificationCodeRequest;
 use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Mail\EmailVerificationCodeMail;
 use App\Services\AuthService;
 use App\Traits\HelperTrait;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 
@@ -32,7 +33,7 @@ class AuthController extends Controller
         return response()->json(['message' => Config::get('messages.api.register_with_email')]);
     }
 
-    public function sendEmailVerificationCode(sendEmailVerificationCodeRequest $request)
+    public function sendEmailVerificationCode(SendEmailVerificationCodeRequest $request)
     {
         $data = $request->only(['email']);
         $user = $this->auth->findByOrFail('email', $data['email']);
@@ -51,5 +52,10 @@ class AuthController extends Controller
     {
         $this->auth->verifyEmail($request);
         return response()->json(['message' => Config::get('messages.api.verify_email')]);
+    }
+
+    public function loginWithEmail(Request $request)
+    {
+
     }
 }
