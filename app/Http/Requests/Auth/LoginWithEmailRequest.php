@@ -10,11 +10,12 @@ class LoginWithEmailRequest extends FormRequest
     {
         return true;
     }
-    
+
     public function rules()
     {
         return [
-            //
+            "email" => "required|email",
+            "password" => "required"
         ];
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginWithEmailRequest;
 use App\Http\Requests\Auth\RegisterWithEmailRequest;
 use App\Http\Requests\Auth\SendEmailVerificationCodeRequest;
 use App\Http\Requests\Auth\VerifyEmailRequest;
 use App\Mail\EmailVerificationCodeMail;
 use App\Services\AuthService;
 use App\Traits\HelperTrait;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 
@@ -54,8 +54,40 @@ class AuthController extends Controller
         return response()->json(['message' => Config::get('messages.api.verify_email')]);
     }
 
-    public function loginWithEmail(Request $request)
+    public function loginWithEmail(LoginWithEmailRequest $request)
     {
+        $credentials = request(['email', 'password']);
+        if (!$token = auth()->attempt($credentials)) {
+            return response()->json(['common_errors' => [Config::get('messages.api.login_with_email.unauthorized')]], 401);
+        }
+        return $this->respondWithToken($token);
+    }
 
+    protected function respondWithToken($token)
+    {
+        if (empty(auth()->user()->email_verified_at)) {
+            return response()->json(['common_errors' => [Config::get('messages.invalid_user')]], 422);
+        }
+        if (auth()->user()->status != 1) {
+            return response()->json(['common_errors' => [Config::get('messages.inactive_user')]], 422);
+        }
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60
+        ]);
+    }
+
+    public function me()
+    {
+        return response()->json([
+            "user" => auth()->user()
+        ]);
+    }
+
+    public function logout()
+    {
+        auth()->logout();
+        return response()->json(['message' => Config::get('messages.api.logout')]);
     }
 }

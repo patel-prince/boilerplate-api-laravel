@@ -19,6 +19,7 @@ class AuthRepository extends BaseRepository
         $user = $this->users->where('email_verification_code', $data)->firstOrFail();
         $user->email_verified_at = date('Y-m-d H:i:s');
         $user->email_verification_code = null;
+        $user->status = 1;
         $user->save();
         return $user->fresh();
     }
